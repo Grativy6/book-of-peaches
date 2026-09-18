@@ -1,6 +1,6 @@
 """SQLite-backed offline PEACHES test book."""
 from __future__ import annotations
-import base64, json, os, sqlite3, threading
+import base64, json, os, sqlite3, threading, time
 from datetime import datetime, timezone
 from pathlib import Path
 from cryptography.hazmat.primitives import serialization
@@ -22,7 +22,20 @@ class TestBook:
         if not book_id.startswith("test:"): raise ValueError("TestBook requires test: book_id")
         self.path=Path(path); self.book_id=book_id; self.profile_id=profile_id; self.signer=signer or TestSigner(); self._lock=threading.RLock()
         self.path.parent.mkdir(parents=True,exist_ok=True); self._db=sqlite3.connect(self.path,check_same_thread=False,isolation_level=None)
-        self._db.execute("PRAGMA journal_mode=WAL"); self._db.execute("PRAGMA synchronous=FULL"); self._init()
+        self._db.execute("PRAGMA busy_timeout=30000")
+        # journal_mode conversion can return SQLITE_BUSY immediately even
+        # with busy_timeout when independent processes open a new database.
+        deadline=time.monotonic()+10
+        while True:
+            try:
+                self._db.execute("PRAGMA journal_mode=WAL")
+                break
+            except sqlite3.OperationalError as exc:
+                if (getattr(exc,"sqlite_errorcode",0) & 255) not in (sqlite3.SQLITE_BUSY,sqlite3.SQLITE_LOCKED) or time.monotonic() >= deadline:
+                    self._db.close()
+                    raise
+                time.sleep(0.02)
+        self._db.execute("PRAGMA synchronous=FULL"); self._init()
     def _init(self):
         self._db.executescript("""CREATE TABLE IF NOT EXISTS metadata (k TEXT PRIMARY KEY,v TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS records (sequence INTEGER PRIMARY KEY, request_id TEXT NOT NULL, intent_hash TEXT NOT NULL, registration_id TEXT UNIQUE NOT NULL, previous_head TEXT NOT NULL, bundle TEXT NOT NULL);
