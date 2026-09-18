@@ -21,6 +21,19 @@ Objects are serialized as UTF-8 JSON with sorted keys, compact separators, no fl
 
 The object digest is not a request identity. A changed object with an existing request ID is a conflict. An unchanged retry is idempotent. A deliberate second registration uses a new request ID. An interrupted write is recovered by querying the SQLite `records` table by request ID and intent hash; uncertain external outcomes are never retried blindly by this package.
 
+Request IDs are unique within one declared test book. Stamp IDs commit to the
+canonical envelope, including book/profile, checker position and previous
+head. SHA-256 supplies collision resistance, not a mathematical guarantee
+that no two IDs can ever coincide. A database uniqueness conflict is an
+append failure requiring review; it never overwrites the earlier record.
+Delayed requests retain source observation time separately from the checker's
+registration time.
+
+To minimize disclosure, submit a commitment object rather than private source
+content. The receipt then identifies that exact commitment object; it does not
+prove the undisclosed source or make its contents public. This package does
+not discover or ingest private evidence.
+
 `issuer_id` is an unverified submitter declaration in this release. The checker signature authenticates the checker’s registration event, not the issuer’s identity or institutional claims. No issuer attestation is promoted to authority.
 
 The append path uses SQLite WAL mode, `synchronous=FULL`, a transaction, a process-local lock, an expected-head check and a unique request/registration table. Recovery distinguishes `FOUND`, `NOT_FOUND`, and `CONFLICT` for an uncertain request. A valid prefix does not establish freshness, and conflicting or stale mirrors must remain visible to a higher-level integration. A signature without trusted checker role, sequence, previous head and inclusion is reported as `SIGNATURE_VALID_UNANCHORED`, never as a registered stamp.
