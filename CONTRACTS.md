@@ -4,7 +4,7 @@ PEACHES means Provenance, Ethics, Authority, Consent, Human Empathetic Standing.
 
 ## Two layers
 
-The **common stamp specification** defines canonical finite JSON, distinct `book_id`, `profile_id`, `object_id`, `request_id`, `registration_id`, issuer and checker signatures, claim ceiling, and verification results. The common API is:
+The **common stamp specification** defines canonical finite JSON, distinct `book_id`, `profile_id`, `object_id`, `request_id`, `registration_id`, issuer declarations and checker signatures, claim ceiling, and verification results. The common API is:
 
 ```python
 prepare_registration(payload: dict) -> dict
@@ -29,4 +29,19 @@ The test profile includes a signed key/profile transition fixture: both the old 
 
 ## Result ceiling
 
-`VALID_REGISTERED_STAMP` means the bytes, object/request identities, trusted checker role, chain position, inclusion and signature verified for the supplied bundle. `SIGNATURE_VALID_UNANCHORED` means only that the signature verifies. Neither status means approved, safe, authorized, ethical, consented, current, or true. `VALID_PREFIX` means the local test book's records verified; it does not prove that the book is current or canonical outside its named test book.
+`VALID_UNDER_DECLARED_CONTEXT` means the canonical envelope and signature match caller-declared checker, chain and inclusion parameters. It is conditional evidence, not a book receipt. `SIGNATURE_VALID_UNANCHORED` verifies only the signature and canonical envelope. `BOOK_LOCAL_VALIDATED` and `BOOK_LOCAL_INCLUDED` additionally use the configured test book's anchored control timeline and records. No result means approved, safe, authorized, ethical, consented, current or true; a verified prefix does not prove freshness.
+
+## Recovery procedure
+
+Retain the request ID and intent hash before dispatch. After an unknown result,
+call `TestBook.recover_request(request_id, intent_hash)`: `FOUND` returns the
+recorded bundle, `NOT_FOUND` permits reconsidering the same request, and
+`CONFLICT` requires review. Changed intent requires a new deliberate request
+or a surfaced conflict; never treat a retry as renewed authority.
+
+Export with `TestBook.export()` and import into a separately configured
+test mirror with `import_export()`. Preserve its book, genesis and current
+checker/profile bindings. Current-state equality is relative to the bound
+head, not proof of network freshness. Profile/key transition fixtures retain
+old bytes and signed controls; incompatible source contracts require a named
+successor. All keys supplied by `TestSigner` are public synthetic fixtures.

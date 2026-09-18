@@ -94,6 +94,21 @@ def test_recovery_before_and_after_commit(tmp_path):
     assert b.register(p, fault="after_commit")["status"]=="UNKNOWN_AFTER_COMMIT"
     assert b.recover_request("test:recover")["status"]=="FOUND"
 
+def test_full_intent_binds_external_stamp_and_book(tmp_path):
+    b=TestBook(tmp_path/"intent.sqlite")
+    original={**payload(), "institution_stamp":{"external_book":"test:institution","stamp":"test:s1"}}
+    assert b.register(original)["status"]=="APPENDED_TEST_RECORD"
+    changed={**original, "institution_stamp":{"external_book":"test:institution","stamp":"test:s2"}}
+    assert b.register(changed)["status"]=="REQUEST_INTENT_CONFLICT"
+
+def test_signed_noncanonical_schema_claim_or_intent_is_rejected(tmp_path):
+    b=TestBook(tmp_path/"canonical.sqlite")
+    bundle=b.register(payload())["bundle"]
+    for field,value in (("schema","other/schema"),("claim_ceiling","grants_authority"),("request_intent_hash","fake"),("unknown_field","unbound")):
+        changed={**bundle,field:value}
+        signed=sign_registration({k:v for k,v in changed.items() if k!="signature"}, b.signer.key,b.signer.key_id)
+        assert verify_bundle(signed)["status"]=="INVALID_REGISTRATION"
+
 def test_stale_writer_cannot_append_but_can_replay_existing_request(tmp_path):
     live=TestBook(tmp_path/"stale.sqlite"); stale=TestBook(tmp_path/"stale.sqlite")
     first=live.register(payload("test:stale")); assert first["status"]=="APPENDED_TEST_RECORD"

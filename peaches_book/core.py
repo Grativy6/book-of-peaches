@@ -43,7 +43,7 @@ def prepare_registration(payload: dict, context: dict | None = None) -> dict:
     required = {"book_id", "profile_id", "object", "request_id", "observed_at", "issuer_id"}
     missing = required - payload.keys()
     if missing: raise PeachesError("missing fields: " + ",".join(sorted(missing)))
-    if not str(payload["book_id"]).startswith("test:") or not str(payload["issuer_id"]).startswith("test:"):
+    if any(not isinstance(payload[k], str) or not payload[k].startswith("test:") or len(payload[k]) > 4096 for k in ("book_id", "profile_id", "issuer_id", "request_id")):
         raise PeachesError("test namespace required")
     try:
         stamp_time=datetime.fromisoformat(str(payload["observed_at"]).replace("Z","+00:00"))
@@ -55,7 +55,9 @@ def prepare_registration(payload: dict, context: dict | None = None) -> dict:
             if registered.tzinfo is None: raise ValueError
         except Exception as e: raise PeachesError("checker_registered_at must be an ISO-8601 aware timestamp") from e
     obj = payload["object"]
-    request_intent = {"request_id":payload["request_id"], "profile_id":payload["profile_id"], "observed_at":payload["observed_at"], "issuer_id":payload["issuer_id"], "object_id":digest(obj)}
+    request_intent = {"book_id":payload["book_id"], "request_id":payload["request_id"], "profile_id":payload["profile_id"], "observed_at":payload["observed_at"], "issuer_id":payload["issuer_id"], "object_id":digest(obj)}
+    if "institution_stamp" in payload:
+        request_intent["institution_stamp"] = payload["institution_stamp"]
     envelope = {"schema":"peaches.registration/0.2", "book_id":payload["book_id"], "profile_id":payload["profile_id"],
       "object_id":digest(obj), "object":obj, "request_id":payload["request_id"],
       "request_intent_hash":digest(request_intent), "observed_at":payload["observed_at"],
@@ -78,6 +80,8 @@ def verify_bundle(bundle: dict, context: dict | None = None) -> dict:
     try:
         fields={k:bundle[k] for k in ("sequence","previous_head","checker_id","checker_registered_at","profile_transition") if k in bundle}
         env = prepare_registration(bundle, fields)
+        if canonical_bytes(_signed_content(bundle)) != canonical_bytes(env):
+            errors.append("canonical_envelope_mismatch")
         if bundle.get("registration_id") != env["registration_id"]: errors.append("registration_id_mismatch")
         if bundle.get("object_id") != env["object_id"]: errors.append("object_id_mismatch")
         sig=bundle.get("signature")
