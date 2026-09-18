@@ -1,0 +1,118 @@
+{
+  "schema": "branchline.peaches.founding-manifest/0.1",
+  "status": "DRAFT_REFERENCE_CUSTODY_ONLY",
+  "effect": {
+    "adopts_sources": false,
+    "creates_genesis": false,
+    "issues_stamp": false,
+    "grants_authority": false
+  },
+  "hash": {
+    "algorithm": "SHA-256",
+    "claim_ceiling": "A matching digest establishes observed byte identity only."
+  },
+  "sources": [
+    {
+      "source_id": "PAL-2.3-SPINE",
+      "family": "PAL",
+      "version": "2.3",
+      "filename": "PAL_v2.3_Mechanical_Structural_Spine.docx",
+      "public_locator": "https://zenodo.org/records/22240134",
+      "sha256": "e9517b17278b72995f22469d825a62ad9a47d3a151089684f3d4c3ef96e4e9a2",
+      "disposition": "SOURCE_DERIVED_REFERENCE"
+    },
+    {
+      "source_id": "PAL-2.3-C",
+      "family": "PAL",
+      "version": "2.3-C",
+      "filename": "PAL_v2.3-C_Compatibility_Note.docx",
+      "public_locator": "https://zenodo.org/records/22240134",
+      "sha256": "57bd5432c6a0a4474c781f918e60e1fcf3f1b80119bfdc317bf6c17bbbc80f07",
+      "disposition": "SOURCE_DERIVED_REFERENCE"
+    },
+    {
+      "source_id": "PAL-2.3-L",
+      "family": "PAL",
+      "version": "2.3-L",
+      "filename": "PAL_v2.3-L_Obligation_and_Decision_Ledger.docx",
+      "public_locator": "https://zenodo.org/records/22240134",
+      "sha256": "694449304139c642c5112f9e41f3b41848a652fc7d12b9a60450bf5e776f704b",
+      "disposition": "SOURCE_DERIVED_REFERENCE"
+    },
+    {
+      "source_id": "PAL-2.3-M",
+      "family": "PAL",
+      "version": "2.3-M",
+      "filename": "PAL_v2.3-M_Mathematical_Realization_Atlas.docx",
+      "public_locator": "https://zenodo.org/records/22240134",
+      "sha256": "c053292376363edd6fc743f0f2e31e3bb3850edc78ade3a289bbb07e7e8452c5",
+      "disposition": "SOURCE_DERIVED_REFERENCE"
+    },
+    {
+      "source_id": "PAL-2.3-T",
+      "family": "PAL",
+      "version": "2.3-T",
+      "filename": "PAL_v2.3-T_Conformance_Tests.docx",
+      "public_locator": "https://zenodo.org/records/22240134",
+      "sha256": "bf79d3a76ef71d6946704be551488bdfe2c062231f4a0c1a85bb51b203fe4b89",
+      "disposition": "SOURCE_DERIVED_REFERENCE"
+    },
+    {
+      "source_id": "PECAN-1.0.4",
+      "family": "PECAN",
+      "version": "1.0.4",
+      "filename": "PECAN_v1.0.4_Public_Protocol_Specification.docx",
+      "public_locator": "https://zenodo.org/records/21760884",
+      "sha256": "d90ff29d65660ef0dc495d331adfff08caa3d91e3bf0bcb5b566b2e75223fd43",
+      "disposition": "SOURCE_DERIVED_REFERENCE"
+    },
+    {
+      "source_id": "PEA-CORE-1.1.3",
+      "family": "PEA",
+      "version": "1.1.3",
+      "filename": "PEA_Core_v1.1.3_Public_Ethical_Review_Specification.docx",
+      "public_locator": "https://zenodo.org/records/21911684",
+      "sha256": "4acf0da392dbb3be0f10b7ab08d0153bda67a502bcac3337ac8ce762adeb6a57",
+      "disposition": "SOURCE_DERIVED_REFERENCE"
+    },
+    {
+      "source_id": "SEED-0.3",
+      "family": "SEED",
+      "version": "0.3",
+      "filename": "SEED_v0.3_Complete_Release_Discipline.docx",
+      "public_locator": "https://zenodo.org/records/21760893",
+      "sha256": "45bb853b7c61997df32f04c45df20b4761bae130b8a0a4d7f583b451174e5985",
+      "disposition": "SOURCE_DERIVED_REFERENCE"
+    },
+    {
+      "source_id": "PPP-0.6",
+      "family": "PPP",
+      "version": "0.6",
+      "filename": "PPP_Kernel_v0.6_Public_Integration_and_Verification_Specification.docx",
+      "public_locator": null,
+      "sha256": "bd6e02b7e1c385d9217630a4639a5de67aa322d4536649e1ccf701a15943503a",
+      "disposition": "SOURCE_DERIVED_REFERENCE_HISTORICAL_PAL2.2"
+    },
+    {
+      "source_id": "CHARTER-1.0",
+      "family": "CHARTER",
+      "version": "1.0",
+      "filename": "CHARTER_v1.0_Framed_Prime_Shells_and_Bound_Persistent_Shells.docx",
+      "public_locator": "https://zenodo.org/records/22288471",
+      "sha256": "3f813ecadfcea957bdccb157d83792612a85c78e318a4ec22da62efc3d8bcabf",
+      "disposition": "SOURCE_DERIVED_REFERENCE"
+    }
+  ],
+  "open_adoption": [
+    "book_id",
+    "profile_id",
+    "checker_id",
+    "key_custody",
+    "succession",
+    "compromise_recovery",
+    "mirror_policy",
+    "privacy_policy",
+    "genesis_procedure"
+  ],
+  "locator_status": "Public URLs are declared source references. The current build verified local source bytes; publisher retrieval was unavailable and byte equivalence to publisher downloads is not asserted."
+}
