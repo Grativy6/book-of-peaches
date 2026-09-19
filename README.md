@@ -2,11 +2,13 @@
 
 Non-authoritative stamps for provenance.
 
-**Status: frozen pre-Genesis alignment.** This repository contains no Genesis,
-live stamp, official stamper, official checker, operational Book service, or
-privileged registry. The frozen boundary is recorded in
-[PREGENESIS-FREEZE.md](PREGENESIS-FREEZE.md). A later Genesis requires a
-separate human act and new exact bytes.
+**Status: Genesis declaration recorded; signing pending.** Christopher Daniel
+Pang has supplied the declaration preserved in the
+[Genesis and H1 preparation](genesis/preparation-v1/README.md). It records his
+human statement; the signed Genesis and `PEACHES:H1` stamps remain unissued.
+There is no official stamper, official checker, operational Book service, or
+privileged registry. [PREGENESIS-FREEZE.md](PREGENESIS-FREEZE.md) preserves the
+earlier specification freeze; its exact payload bytes remain unchanged.
 
 [FLOOR.md](FLOOR.md) defines the minimal PEACHES floor. A PEACHES stamp is
 issued independently by its stated issuer. A checker may report whether

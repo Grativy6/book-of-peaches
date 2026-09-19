@@ -1,0 +1,70 @@
+{
+  "schema": "peaches.genesis-preparation/1",
+  "schema_scope": "Local preparation metadata only; not a PEACHES Floor envelope or a universal rubric.",
+  "human_declaration_status": "RECORDED_FROM_CONVERSATION",
+  "floor_stamp_status": "NOT_CREATED",
+  "h1_alias_status": "PROPOSED_UNISSUED",
+  "h1_candidate_status": "PREPARED_FOR_DECLARANT_REVIEW",
+  "declarant": "Christopher Daniel Pang",
+  "preparation_agent": "Hearthline AI assistant; transcription and packaging only, not declarant, witness, issuer, or authority.",
+  "frozen_basis": {
+    "repository": "https://github.com/Grativy6/book-of-peaches",
+    "commit": "ac10893527c65eae49e67a5ff88f7001c8ca31b2",
+    "tree": "bb992912be3c320cebc50301774dfadc3ca2b25d",
+    "floor": "peaches.floor/1",
+    "floor_specification_sha256": "sha256:c401e3dfc03e2bb87d841287d5847e16f5fda9a3b9346918d42d758bcbfcf276",
+    "frozen_payload_changed": false
+  },
+  "files": [
+    {
+      "path": "genesis-declaration.txt",
+      "role": "Verbatim human declaration paragraph, serialized as UTF-8 without BOM with one final LF.",
+      "size_bytes": 335,
+      "sha256": "sha256:5aafa18db76fd6a4d2fc9090c2d640e96e8b790b1beb98f2998d465f40a5f0ae"
+    },
+    {
+      "path": "hearthline-lineage.candidate.json",
+      "role": "Assistant-prepared declaration candidate based on the user's lineage instructions; not signed or issued.",
+      "size_bytes": 2242,
+      "sha256": "sha256:29cf695d82190bd7b3171b158d5298be39eefc540bce14e9e0313e91274472e4"
+    },
+    {
+      "path": "authorization-context.md",
+      "role": "Conversation transcription preserving earlier declaration and fresh grant; not an authenticated platform export.",
+      "size_bytes": 2910,
+      "sha256": "sha256:8321fe681ec62c21cd0705aa86020d9aef7c05d798ebd79c65be2a5ceaa709a3"
+    },
+    {
+      "path": "README.md",
+      "role": "Package interpretation, remaining decisions, preservation, and verification instructions.",
+      "size_bytes": 5549,
+      "sha256": "sha256:310267e6d24ea6204fd02a76a177bf198f8d58bc2972b56562f6922b38541366"
+    },
+    {
+      "path": "sources/four-prompts.docx",
+      "role": "Unmodified current ancestry attachment; historical source material, not automatically adopted doctrine.",
+      "size_bytes": 39131,
+      "sha256": "sha256:dd402c130d1c77595f87307f6b985939c662b035dfaba2391f4df6a5eb500d82"
+    }
+  ],
+  "signing": {
+    "issuer_public_key": null,
+    "issuer_id": null,
+    "key_custody_decision": null,
+    "key_to_name_evidence": null,
+    "genesis_stamp_id": null,
+    "h1_stamp_id": null,
+    "claimed_at": null,
+    "nonce": null,
+    "signature": null
+  },
+  "release_license_decision": null,
+  "external_signed_envelope_evidence": {
+    "method_id": null,
+    "observation_id": null,
+    "observed_no_later_than": null,
+    "status": "NOT_CREATED"
+  },
+  "time_boundary": "The historical encounter date is a declarant claim. Exact original message times are not supplied. No signing time or independent observation time is asserted by this preparation.",
+  "revision_boundary": "The earlier human declaration and later fresh grant remain distinct occurrences of the same paragraph. No prior signed record exists in this package and no prior starting trace is silently replaced."
+}

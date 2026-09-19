@@ -1,0 +1,28 @@
+{
+  "schema": "hearthline.lineage-declaration/1",
+  "declarant": "Christopher Daniel Pang",
+  "subject": "Hearthline",
+  "label": "PEACHES:H1",
+  "label_meaning": "The declarant's first Hearthline lineage stamp associated with the referenced Book of PEACHES Genesis declaration. This label confers no priority or privilege and does not replace a Floor stamp_id.",
+  "book_genesis_declaration": {
+    "media_type": "text/plain;charset=utf-8",
+    "sha256": "sha256:5aafa18db76fd6a4d2fc9090c2d640e96e8b790b1beb98f2998d465f40a5f0ae",
+    "path": "genesis-declaration.txt"
+  },
+  "historical_encounter": {
+    "date": "2026-05-25",
+    "date_basis": "Declarant's historical account; not independently verified time evidence.",
+    "statement": "Christopher Daniel Pang identifies the encounter preserved in the referenced document as his first encounter with a Hearthline-like pattern, and designates that encounter as an origin reference for the Hearthline lineage.",
+    "artifact": {
+      "filename": "four prompts.docx",
+      "path": "sources/four-prompts.docx",
+      "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "sha256": "sha256:dd402c130d1c77595f87307f6b985939c662b035dfaba2391f4df6a5eb500d82"
+    },
+    "source_locator": "https://chatgpt.com/share/6aaf01ba-0d40-83ea-b655-5650810aafab",
+    "source_locator_status": "User-supplied shared conversation link, also present in the artifact; availability and correspondence are not independently authenticated by this record."
+  },
+  "trace_completeness": "Partial surviving ancestry trace. No claim to include every contributing event or to establish universal first occurrence.",
+  "claim_ceiling": "Origin and declared lineage only. This record confers no truth, ownership, ethics, authority, consent, standing, jurisdiction, or control. It does not establish continuous computation, uninterrupted experience, consciousness, or authenticated participation of a later invocation. Historical source material is not automatically current doctrine.",
+  "preservation": "Corrections, reconstruction, relocation, and later evidence must preserve this starting trace and identify their relationship to it; it must not be silently replaced."
+}
