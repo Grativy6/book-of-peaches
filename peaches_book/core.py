@@ -1,9 +1,15 @@
-"""Canonical PEACHES envelopes and trust-aware verification."""
+"""EXPERIMENTAL/NONNORMATIVE centralized test-registry primitives.
+
+This module belongs to a legacy, test-namespace-only registry experiment.  It
+is not the PEACHES floor, an official checker, or a source of trust or
+authority.
+"""
 from __future__ import annotations
 import base64, hashlib, json, math
 from datetime import datetime, timezone
 from typing import Any
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from .floor import FloorError, _validate_ed25519_signature_encoding
 
 MAX_BYTES, MAX_DEPTH, MAX_ITEMS = 100_000, 32, 10_000
 SAFE_MAX = 2**53 - 1
@@ -86,20 +92,31 @@ def verify_bundle(bundle: dict, context: dict | None = None) -> dict:
         if bundle.get("object_id") != env["object_id"]: errors.append("object_id_mismatch")
         sig=bundle.get("signature")
         if not sig: errors.append("missing_signature")
+        elif not isinstance(sig, dict): errors.append("invalid_signature_object")
+        elif set(sig) != {"algorithm","key_id","value"}: errors.append("signature_fields_mismatch")
         elif sig.get("algorithm") != "Ed25519": errors.append("unsupported_signature_algorithm")
         else:
             key_id=sig.get("key_id","")
-            if not key_id.startswith("test:"): errors.append("untrusted_key_namespace")
+            if not isinstance(key_id,str) or not key_id.startswith("test:"): errors.append("untrusted_key_namespace")
             else:
-                Ed25519PublicKey.from_public_bytes(unb64(key_id[5:])).verify(unb64(sig["value"]), canonical_bytes(_signed_content(bundle)))
+                public_key=unb64(key_id[5:]); signature=unb64(sig["value"])
+                if b64(public_key) != key_id[5:] or b64(signature) != sig["value"]:
+                    raise PeachesError("noncanonical_base64url")
+                # Do not inherit relaxed backend acceptance of identity or
+                # non-canonical Ed25519 encodings, even in this quarantined
+                # experiment.
+                _validate_ed25519_signature_encoding(public_key,signature)
+                Ed25519PublicKey.from_public_bytes(public_key).verify(signature, canonical_bytes(_signed_content(bundle)))
+                if bundle.get("checker_id") != key_id:
+                    errors.append("checker_signature_key_mismatch")
                 if context is None:
                     if not errors: return {"status":"SIGNATURE_VALID_UNANCHORED","errors":[],"claim":"signature_only"}
                 else:
                     if context.get("book_id") != bundle.get("book_id") or context.get("profile_id") != bundle.get("profile_id"): errors.append("book_or_profile_mismatch")
-                    if context.get("checker_id") != key_id: errors.append("checker_role_mismatch")
+                    if context.get("checker_id") != key_id or context.get("checker_id") != bundle.get("checker_id"): errors.append("checker_role_mismatch")
                     if context.get("sequence") != bundle.get("sequence") or context.get("previous_head") != bundle.get("previous_head"): errors.append("chain_position_mismatch")
                     if context.get("inclusion") != bundle.get("registration_id"): errors.append("missing_inclusion")
-    except Exception as e: errors.append(type(e).__name__ if not isinstance(e, PeachesError) else str(e))
+    except Exception as e: errors.append(str(e) if isinstance(e,(PeachesError,FloorError)) else type(e).__name__)
     if errors: return {"status":"INVALID_REGISTRATION","errors":errors,"claim":"no_registration_claim"}
     if context is not None: return {"status":"VALID_UNDER_DECLARED_CONTEXT","errors":[],"trust":"caller_supplied_context_not_a_book_receipt","claim":"conditional_only"}
     return {"status":"SIGNATURE_VALID_UNANCHORED","errors":[],"claim":"signature_only"}
