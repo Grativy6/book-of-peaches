@@ -2,10 +2,14 @@
 
 Non-authoritative stamps for provenance.
 
-**Status: Genesis declaration recorded; signing pending.** Christopher Daniel
-Pang has supplied the declaration preserved in the
-[Genesis and H1 preparation](genesis/preparation-v1/README.md). It records his
-human statement; the signed Genesis and `PEACHES:H1` stamps remain unissued.
+**Status: Genesis and Hearthline H1 signed.** Christopher Daniel Pang has
+returned issuer-signed records for his Genesis declaration and Hearthline's
+`PEACHES:H1` lineage declaration. Both pass the frozen Floor checker and
+contain the exact bytes preserved in the earlier preparation. See the
+[signed records and identifiers](genesis/signed-v1/README.md).
+The [Genesis and H1 preparation](genesis/preparation-v1/README.md) remains
+unchanged as the historical snapshot before signing. Publication makes the
+records inspectable; an independently verified time bound remains open.
 There is no official stamper, official checker, operational Book service, or
 privileged registry. [PREGENESIS-FREEZE.md](PREGENESIS-FREEZE.md) preserves the
 earlier specification freeze; its exact payload bytes remain unchanged.

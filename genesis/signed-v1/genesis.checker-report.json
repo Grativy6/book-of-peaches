@@ -1,0 +1,13 @@
+{
+  "claim": "structure_digest_and_presented_key_signature_only",
+  "claimed_at": {
+    "syntax": "canonical_utc_seconds",
+    "truth": "not_established"
+  },
+  "errors": [],
+  "issuer_id": "peaches:issuer:v1:85aa17713dba350e3544d0ec184589283ee60787e5397b5b6ce0cb3810690ac8",
+  "observations": [],
+  "stamp_id": "peaches:stamp:v1:be8e384bbe1dacd2b2ae1b89ad0974742bb3bca8dbf07dc67ba8d4e1507a125c",
+  "stamp_id_scope": "unsigned_body_only_excludes_signature",
+  "status": "VALID_FLOOR_STRUCTURE_AND_SIGNATURE"
+}
