@@ -1,6 +1,11 @@
 # PEACHES source cards
 
-These cards are independent reading notes for the founding package. They preserve source role, nonclaims, bounded tests, and open burdens. They do not copy source text and do not adopt it.
+These cards are independent reading notes retained with the pre-Genesis source
+package. They preserve source identity, version, candidate role, nonclaims,
+bounded tests, and open burdens. They do not copy source text, adopt a source,
+establish conformance, define [PEACHES Floor v1](FLOOR.md), create Genesis, or
+issue a stamp. [PREGENESIS-FREEZE.md](PREGENESIS-FREEZE.md) records the exact
+current boundary.
 
 ## PAL v2.3 family
 
@@ -57,4 +62,12 @@ These cards are independent reading notes for the founding package. They preserv
 
 ## Reading disposition
 
-The founding package uses the five foundation families above as source-linked references. Math, science, context, software, BRIDGE, GOLD, GPPR, and related research remain optional shelves for Hearthline/toolkit work; they are not hidden prerequisites of the public provenance floor.
+The pre-Genesis package keeps the five foundation families above as
+source-linked references, not as an authority stack. `FLOOR.md` alone defines
+the current minimal floor. The checker-signed SQLite implementation is a
+separate nonnormative Branchline offline test-book profile; none of these
+sources makes it an official stamper, checker, registry, or Book service.
+
+Math, science, context, software, BRIDGE, GOLD, GPPR, and related research
+remain optional shelves for Hearthline/toolkit work; they are not hidden
+prerequisites of the public provenance floor.

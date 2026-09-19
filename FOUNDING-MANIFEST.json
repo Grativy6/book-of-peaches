@@ -1,10 +1,13 @@
 {
   "schema": "branchline.peaches.founding-manifest/0.1",
-  "status": "DRAFT_REFERENCE_CUSTODY_ONLY",
+  "status": "PREGENESIS_REFERENCE_CUSTODY_ONLY",
   "effect": {
     "adopts_sources": false,
+    "defines_floor": false,
     "creates_genesis": false,
     "issues_stamp": false,
+    "designates_checker": false,
+    "operates_registry": false,
     "grants_authority": false
   },
   "hash": {
@@ -103,16 +106,25 @@
       "disposition": "SOURCE_DERIVED_REFERENCE"
     }
   ],
+  "alignment": {
+    "floor_path": "FLOOR.md",
+    "floor_protocol": "peaches.floor/1",
+    "freeze_path": "PREGENESIS-FREEZE.md",
+    "freeze_status": "FROZEN_PRE_GENESIS",
+    "centralized_profile_disposition": "The Branchline offline test-book profile is a nonnormative optional experiment, not the PEACHES Floor or a proposed Book service."
+  },
   "open_adoption": [
-    "book_id",
-    "profile_id",
-    "checker_id",
-    "key_custody",
-    "succession",
-    "compromise_recovery",
-    "mirror_policy",
-    "privacy_policy",
     "genesis_procedure"
+  ],
+  "optional_experiment_residuals": [
+    "test_book_id",
+    "test_profile_id",
+    "active_checker_designation",
+    "test_key_custody",
+    "test_checker_succession",
+    "test_checker_compromise_recovery",
+    "test_mirror_policy",
+    "test_privacy_policy"
   ],
   "locator_status": "Public URLs are declared source references. The current build verified local source bytes; publisher retrieval was unavailable and byte equivalence to publisher downloads is not asserted."
 }

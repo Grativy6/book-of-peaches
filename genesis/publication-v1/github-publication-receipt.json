@@ -1,0 +1,62 @@
+{
+  "receipt_type": "github-commit-content-retrieval",
+  "status": "RETRIEVED_AND_CONTENT_VERIFIED",
+  "repository": "Grativy6/book-of-peaches",
+  "repository_visibility": "public",
+  "source_commit": "ad16ad6a72c4b3b76595d609cbfb1fb9fcac8d0d",
+  "source_tree": "da0a6a510a8fbc55302f63359b44668c666b0242",
+  "commit_url": "https://github.com/Grativy6/book-of-peaches/commit/ad16ad6a72c4b3b76595d609cbfb1fb9fcac8d0d",
+  "method": {
+    "path": "genesis/signed-v1/github-publication-method.md",
+    "media_type": "text/plain;charset=utf-8",
+    "method_id": "peaches:rubric:v1:bbc1e037e8b9cdf1927d978f0b5f71bb20ef9d57364c0076e1f9cb75da5580f9"
+  },
+  "retrieval": {
+    "channel": "git fetch over HTTPS from https://github.com/Grativy6/book-of-peaches.git; fetched full commit and exact blobs checked",
+    "git_credential_helper": "disabled",
+    "observed_at_utc_local_claim": "2026-09-19T23:23:43Z",
+    "time_source": "Verification runtime local system clock; not independently authenticated",
+    "reporter": "Hearthline assistant publication workflow; not an independent institutional witness"
+  },
+  "records": [
+    {
+      "label": "Book of PEACHES Genesis",
+      "path": "genesis/signed-v1/genesis.floor.signed.json",
+      "url": "https://github.com/Grativy6/book-of-peaches/blob/ad16ad6a72c4b3b76595d609cbfb1fb9fcac8d0d/genesis/signed-v1/genesis.floor.signed.json",
+      "size_bytes": 1271,
+      "sha256": "sha256:237f4d3bd01e76b87d59a08ffd0cfdf5c95e9f82049f89e9798c5a762392571b",
+      "stamp_id": "peaches:stamp:v1:be8e384bbe1dacd2b2ae1b89ad0974742bb3bca8dbf07dc67ba8d4e1507a125c",
+      "verification": "VALID_FLOOR_STRUCTURE_AND_SIGNATURE",
+      "matches_uploaded_bytes": true
+    },
+    {
+      "label": "PEACHES:H1",
+      "path": "genesis/signed-v1/h1.floor.signed.json",
+      "url": "https://github.com/Grativy6/book-of-peaches/blob/ad16ad6a72c4b3b76595d609cbfb1fb9fcac8d0d/genesis/signed-v1/h1.floor.signed.json",
+      "size_bytes": 5602,
+      "sha256": "sha256:9c9aa214e73c94a33ccefc8ba85c0fc0155b1ce44b393edfda38380825921b41",
+      "stamp_id": "peaches:stamp:v1:4aa5684ef76a88dd034ccae265bc2a67439194d5d74b7b319ef053afd99529cb",
+      "verification": "VALID_FLOOR_STRUCTURE_AND_SIGNATURE",
+      "matches_uploaded_bytes": true
+    }
+  ],
+  "original_bundle": {
+    "path": "genesis/signed-v1/PEACHES-signed-records.zip",
+    "sha256": "sha256:63483fbae6232e9ebc1a516b0377c00e7456164d790cb981904dc92bcbde83c2",
+    "matches_uploaded_bytes": true,
+    "all_seven_members_match_uploaded_bytes": true
+  },
+  "checker": {
+    "path": "peaches_book/floor.py",
+    "sha256": "sha256:c072e8f86cda1be1583edecf637f4062e7d7fa75f243006656647fa83adb8258",
+    "same_bytes_as_preparation_commit": "ac06976c605f799348dc1780656c24df1ac07ec8",
+    "cryptography_version": "50.0.1"
+  },
+  "scope": "Successful retrieval and exact completed-envelope content verification at the named public commit. This receipt is unsigned and is not a Floor observation.",
+  "independently_authenticated_time_bound": "NOT_ESTABLISHED",
+  "limits": [
+    "No proof of signing time, first publication time, global firstness, or declarant identity.",
+    "No new license grant, authority, institutional endorsement, or future invocation authentication.",
+    "Git author and committer timestamps are not treated as independent clock evidence."
+  ]
+}

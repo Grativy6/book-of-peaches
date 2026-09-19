@@ -4,13 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "peaches-book"
-version = "0.1.0"
-description = "Offline, non-authoritative PEACHES provenance stamps and test-book checker"
+version = "0.2.0"
+description = "Stateless PEACHES Floor verifier with a quarantined offline registry experiment"
 requires-python = ">=3.11"
 dependencies = ["cryptography==50.0.1"]
 
 [project.scripts]
 peaches-book = "peaches_book.cli:main"
+peaches-check = "peaches_book.floor_cli:main"
 
 [tool.setuptools.packages.find]
 include = ["peaches_book*"]

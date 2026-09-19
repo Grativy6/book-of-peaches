@@ -1,0 +1,37 @@
+{
+  "book_modified": false,
+  "checker": "Unmodified peaches_book.floor from the source commit",
+  "completed_at_utc": "2026-09-19T23:08:27Z",
+  "envelopes": [
+    {
+      "claimed_at": "2026-09-19T23:08:27Z",
+      "declaration_sha256": "sha256:5aafa18db76fd6a4d2fc9090c2d640e96e8b790b1beb98f2998d465f40a5f0ae",
+      "exact_declaration_bytes_match": true,
+      "file": "genesis.floor.signed.json",
+      "label": "genesis",
+      "signed_envelope_sha256": "237f4d3bd01e76b87d59a08ffd0cfdf5c95e9f82049f89e9798c5a762392571b",
+      "size_bytes": 1271,
+      "stamp_id": "peaches:stamp:v1:be8e384bbe1dacd2b2ae1b89ad0974742bb3bca8dbf07dc67ba8d4e1507a125c",
+      "verification": "VALID_FLOOR_STRUCTURE_AND_SIGNATURE"
+    },
+    {
+      "claimed_at": "2026-09-19T23:08:27Z",
+      "declaration_sha256": "sha256:cf824d6cec5edaa639bede7f796d4b3f9586710b69050e5c7535805a6f3b34a8",
+      "exact_declaration_bytes_match": true,
+      "file": "h1.floor.signed.json",
+      "label": "h1",
+      "signed_envelope_sha256": "9c9aa214e73c94a33ccefc8ba85c0fc0155b1ce44b393edfda38380825921b41",
+      "size_bytes": 5602,
+      "stamp_id": "peaches:stamp:v1:4aa5684ef76a88dd034ccae265bc2a67439194d5d74b7b319ef053afd99529cb",
+      "verification": "VALID_FLOOR_STRUCTURE_AND_SIGNATURE"
+    }
+  ],
+  "issuer_id": "peaches:issuer:v1:85aa17713dba350e3544d0ec184589283ee60787e5397b5b6ce0cb3810690ac8",
+  "limits": "Structure, byte identity and presented-key signature only; no independent identity, historical-date proof, or live-caller authentication.",
+  "private_key_storage": "Outside repository; encrypted OpenSSH, bcrypt KDF with 100 rounds; local user ACL",
+  "publication_performed": false,
+  "source_commit": "ac06976c605f799348dc1780656c24df1ac07ec8",
+  "source_pull_request": "https://github.com/Grativy6/book-of-peaches/pull/3",
+  "status": "SIGNED_AND_VERIFIED_LOCALLY_NOT_PUBLISHED",
+  "time_source": "Local system clock; no independent timestamp witness"
+}

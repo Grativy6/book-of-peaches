@@ -1,4 +1,10 @@
-"""SQLite-backed offline PEACHES test book."""
+"""EXPERIMENTAL/NONNORMATIVE centralized SQLite test registry.
+
+This is a legacy, ``test:``-namespace-only implementation experiment.  It is
+not the PEACHES floor, an official stamper or checker, or a source of authority.
+The internal ``GENESIS:test:empty`` marker is only a chain sentinel; it is not a
+PEACHES Genesis or an external trust anchor.
+"""
 from __future__ import annotations
 import base64, json, os, sqlite3, threading, time
 from datetime import datetime, timezone
@@ -8,6 +14,9 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from .core import canonical_bytes, digest, prepare_registration, sign_registration, verify_bundle, b64
 from .profiles import signed_key_transition, verify_key_transition
 
+_EXPORT_FIELDS={"schema","book_id","profile_id","checker_id","genesis_profile_id",
+                "genesis_checker_id","controls","records","head"}
+
 class TestSigner:
     __test__=False
     def __init__(self, seed: bytes=b"peaches-test-key-0000000000000000"):
@@ -16,7 +25,7 @@ class TestSigner:
     def key_id(self): return "test:"+b64(self.key.public_key().public_bytes_raw())
 
 class TestBook:
-    """A real transactional test book, permanently constrained to test identities."""
+    """A transactional registry experiment constrained to test identities."""
     __test__=False
     def __init__(self, path, book_id="test:book/demo", profile_id="test:branchline-profile/0.1", signer=None):
         if not book_id.startswith("test:"): raise ValueError("TestBook requires test: book_id")
@@ -40,6 +49,7 @@ class TestBook:
         self._db.executescript("""CREATE TABLE IF NOT EXISTS metadata (k TEXT PRIMARY KEY,v TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS records (sequence INTEGER PRIMARY KEY, request_id TEXT NOT NULL, intent_hash TEXT NOT NULL, registration_id TEXT UNIQUE NOT NULL, previous_head TEXT NOT NULL, bundle TEXT NOT NULL);
         CREATE UNIQUE INDEX IF NOT EXISTS request_identity ON records(request_id,intent_hash);
+        CREATE UNIQUE INDEX IF NOT EXISTS request_id_unique ON records(request_id);
         CREATE TABLE IF NOT EXISTS controls (sequence INTEGER PRIMARY KEY, control_json TEXT NOT NULL);""")
         vals={k:v for k,v in self._db.execute("SELECT k,v FROM metadata")}
         expected={"book_id":self.book_id,"profile_id":self.profile_id,"checker_id":self.signer.key_id,
@@ -55,10 +65,35 @@ class TestBook:
                 vals={k:v for k,v in self._db.execute("SELECT k,v FROM metadata")}
             except Exception:
                 self._db.rollback(); raise
-        if any(vals.get(k)!=v for k,v in expected.items() if k not in ("genesis_profile_id","genesis_checker_id")):
+        if (any(vals.get(k)!=v for k,v in expected.items() if k not in ("genesis_profile_id","genesis_checker_id","checker_status"))
+                or vals.get("checker_status") not in ("ACTIVE","COMPROMISED")):
             raise ValueError("test book metadata mismatch")
     def _rows(self): return [json.loads(x[0]) for x in self._db.execute("SELECT bundle FROM records ORDER BY sequence")]
     def _controls(self): return [json.loads(x[0]) for x in self._db.execute("SELECT control_json FROM controls ORDER BY sequence")]
+    @staticmethod
+    def _validate_control_chain(controls, rows, genesis_profile, genesis_checker, book_id, current_profile, current_checker):
+        """Validate the full experiment control timeline, even with no records."""
+        if (not isinstance(controls, list) or not isinstance(rows, list)
+                or any(not isinstance(control, dict) for control in controls)
+                or any(not isinstance(row, dict) for row in rows)):
+            return False
+        profile, checker = genesis_profile, genesis_checker
+        previous_effective=0
+        for control in controls:
+            effective=control.get("effective_sequence")
+            if (not isinstance(effective,int) or isinstance(effective,bool)
+                    or effective <= previous_effective or effective > len(rows)+1
+                    or not verify_key_transition(control)
+                    or control.get("book_id") != book_id
+                    or control.get("old_profile") != profile
+                    or control.get("old_checker_id") != checker):
+                return False
+            expected_head=("GENESIS:test:empty" if effective==1 else rows[effective-2].get("registration_id"))
+            if control.get("previous_head") != expected_head:
+                return False
+            previous_effective=effective
+            profile, checker = control["new_profile"], control["new_checker_id"]
+        return profile == current_profile and checker == current_checker
     @staticmethod
     def _timeline(sequence, controls, genesis_profile, genesis_checker, book_id=None):
         profile, checker = genesis_profile, genesis_checker
@@ -85,11 +120,15 @@ class TestBook:
             if "book_id" in payload and payload["book_id"] != self.book_id: return {"status":"BOOK_ID_CONFLICT"}
             if "profile_id" in payload and payload["profile_id"] != self.profile_id: return {"status":"PROFILE_ID_CONFLICT"}
             request_id=payload.get("request_id"); intent=prepare_registration({**payload,"book_id":self.book_id,"profile_id":self.profile_id,"issuer_id":payload.get("issuer_id","test:issuer")})["request_intent_hash"]
-            old=self._db.execute("SELECT bundle,intent_hash FROM records WHERE request_id=? ORDER BY sequence LIMIT 1",(request_id,)).fetchone()
-            if old:
-                return {"status":"IDEMPOTENT_REPLAY" if old[1]==intent else "REQUEST_INTENT_CONFLICT","bundle":json.loads(old[0])}
             self._db.execute("BEGIN IMMEDIATE")
             try:
+                # The request lookup must occur after acquiring the database
+                # write lock.  Otherwise independent processes can both see a
+                # missing request and race into duplicate/conflicting inserts.
+                old=self._db.execute("SELECT bundle,intent_hash FROM records WHERE request_id=?",(request_id,)).fetchone()
+                if old:
+                    self._db.rollback()
+                    return {"status":"IDEMPOTENT_REPLAY" if old[1]==intent else "REQUEST_INTENT_CONFLICT","bundle":json.loads(old[0])}
                 metadata={k:v for k,v in self._db.execute("SELECT k,v FROM metadata")}
                 if metadata["profile_id"]!=self.profile_id or metadata["checker_id"]!=self.signer.key_id:
                     self._db.rollback(); return {"status":"STALE_CHECKER"}
@@ -126,16 +165,60 @@ class TestBook:
                 self._db.rollback(); raise
         return {"status":"CHECKER_COMPROMISED"}
     def verify(self):
-        rows=self._rows(); controls=self._controls(); prev="GENESIS:test:empty"; results=[]; ok=True
+        stored_rows=list(self._db.execute(
+            "SELECT sequence,request_id,intent_hash,registration_id,previous_head,bundle "
+            "FROM records ORDER BY sequence"
+        ))
+        stored_controls=list(self._db.execute(
+            "SELECT sequence,control_json FROM controls ORDER BY sequence"
+        ))
+        rows=[]; controls=[]; storage_errors=[]
+        for position,(sequence,request_id,intent_hash,registration_id,previous_head,encoded) in enumerate(stored_rows,1):
+            try:
+                row=json.loads(encoded)
+            except (TypeError,ValueError):
+                row=None
+            if (not isinstance(row,dict) or sequence != position
+                    or row.get("sequence") != sequence
+                    or row.get("request_id") != request_id
+                    or row.get("request_intent_hash") != intent_hash
+                    or row.get("registration_id") != registration_id
+                    or row.get("previous_head") != previous_head):
+                storage_errors.append(f"record_storage_mismatch:{position}")
+            rows.append(row)
+        for position,(sequence,encoded) in enumerate(stored_controls,1):
+            try:
+                control=json.loads(encoded)
+            except (TypeError,ValueError):
+                control=None
+            if (not isinstance(control,dict) or sequence != control.get("effective_sequence")):
+                storage_errors.append(f"control_storage_mismatch:{position}")
+            controls.append(control)
+        prev="GENESIS:test:empty"; results=[]; ok=True
+        metadata={k:v for k,v in self._db.execute("SELECT k,v FROM metadata")}
+        if storage_errors:
+            return {"status":"INVALID_OR_CONFLICTING","count":len(stored_rows),"results":[],"head":prev,
+                    "trust_source":"none_invalid_test_storage","errors":storage_errors,
+                    "claim":"no_registration_claim"}
+        if not self._validate_control_chain(controls,rows,metadata["genesis_profile_id"],metadata["genesis_checker_id"],self.book_id,metadata["profile_id"],metadata["checker_id"]):
+            return {"status":"INVALID_OR_CONFLICTING","count":len(rows),"results":[],"head":prev,
+                    "trust_source":"none_invalid_test_control_timeline","errors":["invalid_control_timeline"],
+                    "claim":"no_registration_claim"}
+        if not rows:
+            if controls:
+                return {"status":"EMPTY_TEST_BOOK_WITH_VALID_CONTROLS","count":0,"results":[],"head":prev,
+                        "trust_source":"configured_test_anchor_and_verified_control_chain",
+                        "claim":"test_control_timeline_only_no_registration"}
+            return {"status":"EMPTY_TEST_BOOK","count":0,"results":[],"head":prev,
+                    "trust_source":"none_unanchored_empty_test_store","claim":"no_registration_claim"}
         for n,row in enumerate(rows,1):
-            metadata={k:v for k,v in self._db.execute("SELECT k,v FROM metadata")}
             timeline=self._timeline(n,controls,metadata["genesis_profile_id"],metadata["genesis_checker_id"],self.book_id)
             if timeline is None:
                 ok=False; results.append({"status":"INVALID_REGISTRATION","errors":["invalid_control_timeline"],"claim":"no_registration_claim"}); prev=row.get("registration_id"); continue
             expected_profile, expected_checker=timeline
             result=verify_bundle(row,{"book_id":self.book_id,"profile_id":expected_profile,"checker_id":expected_checker,"sequence":n,"previous_head":prev,"inclusion":row.get("registration_id")})
             results.append(result); ok &= result["status"]=="VALID_UNDER_DECLARED_CONTEXT" and row.get("profile_id")==expected_profile and row.get("checker_id")==expected_checker and row.get("previous_head")==prev and row.get("sequence")==n; prev=row.get("registration_id")
-        return {"status":"BOOK_LOCAL_VALIDATED" if ok else "INVALID_OR_CONFLICTING","count":len(rows),"results":results,"head":prev,"trust_source":"anchored_genesis_and_verified_control_chain"}
+        return {"status":"BOOK_LOCAL_VALIDATED" if ok else "INVALID_OR_CONFLICTING","count":len(rows),"results":results,"head":prev,"trust_source":"configured_test_anchor_and_verified_control_chain"}
     def apply_test_transition(self, new_profile, new_signer):
         """Apply a fixture-only cross-signed transition at the next sequence."""
         with self._lock:
@@ -169,73 +252,103 @@ class TestBook:
         metadata={k:v for k,v in self._db.execute("SELECT k,v FROM metadata")}
         return {"schema":"peaches.test-book-export/0.2","book_id":self.book_id,"profile_id":metadata["profile_id"],"checker_id":metadata["checker_id"],"genesis_profile_id":metadata["genesis_profile_id"],"genesis_checker_id":metadata["genesis_checker_id"],"controls":self._controls(),"records":self._rows(),"head":self._head()[1]}
     def import_export(self, exported):
+        if not isinstance(exported,dict): return {"status":"IMPORT_REJECTED","reason":"export_not_object"}
+        if set(exported) != _EXPORT_FIELDS: return {"status":"IMPORT_REJECTED","reason":"export_fields_mismatch"}
         if exported.get("schema")!="peaches.test-book-export/0.2" or exported.get("book_id")!=self.book_id: return {"status":"IMPORT_REJECTED"}
-        metadata={k:v for k,v in self._db.execute("SELECT k,v FROM metadata")}; empty=not self._rows() and not self._controls()
-        local_genesis=(metadata["genesis_profile_id"],metadata["genesis_checker_id"])
-        exported_genesis=(exported.get("genesis_profile_id"),exported.get("genesis_checker_id"))
-        if exported_genesis != local_genesis:
-            if not empty or exported.get("profile_id")!=self.profile_id or exported.get("checker_id")!=self.signer.key_id: return {"status":"IMPORT_REJECTED","reason":"genesis_anchor_mismatch"}
-            genesis_profile,genesis_checker=exported_genesis
-        else:
-            genesis_profile,genesis_checker=local_genesis
-        if exported.get("profile_id")!=self.profile_id or exported.get("checker_id")!=self.signer.key_id: return {"status":"IMPORT_REJECTED","reason":"current_state_mismatch"}
         candidate=exported.get("records",[]); controls=exported.get("controls",[])
+        if not isinstance(candidate,list): return {"status":"IMPORT_REJECTED","reason":"records_not_list"}
+        if not isinstance(controls,list): return {"status":"IMPORT_REJECTED","reason":"controls_not_list"}
+        if any(not isinstance(row,dict) for row in candidate): return {"status":"IMPORT_REJECTED","reason":"invalid_record"}
+        if any(not isinstance(control,dict) for control in controls): return {"status":"IMPORT_REJECTED","reason":"invalid_transition"}
         if any(not verify_key_transition(c) for c in controls): return {"status":"IMPORT_REJECTED","reason":"invalid_transition"}
-        for control in controls:
-            effective=control.get("effective_sequence")
-            expected=("GENESIS:test:empty" if effective==1 else candidate[effective-2].get("registration_id") if isinstance(effective,int) and 1 < effective <= len(candidate)+1 else None)
-            if expected is None or control.get("book_id")!=self.book_id or control.get("previous_head")!=expected:
-                return {"status":"IMPORT_REJECTED","reason":"transition_head_mismatch"}
-        expected_head="GENESIS:test:empty"
-        for n,row in enumerate(candidate,1):
-            if row.get("previous_head") != expected_head: return {"status":"IMPORT_REJECTED","reason":"chain_gap"}
-            timeline=self._timeline(n,controls,genesis_profile,genesis_checker,self.book_id)
-            if timeline is None: return {"status":"IMPORT_REJECTED","reason":"untrusted_checker_timeline"}
-            profile, checker=timeline
-            if row.get("profile_id")!=profile or row.get("checker_id")!=checker: return {"status":"IMPORT_REJECTED","reason":"untrusted_checker_timeline"}
-            if verify_bundle(row,{"book_id":self.book_id,"profile_id":profile,"checker_id":checker,"sequence":n,"previous_head":expected_head,"inclusion":row.get("registration_id")})["status"]!="VALID_UNDER_DECLARED_CONTEXT": return {"status":"IMPORT_REJECTED"}
-            expected_head=row.get("registration_id")
-        if exported.get("head") != expected_head: return {"status":"IMPORT_REJECTED","reason":"head_mismatch"}
-        for row in candidate:
-            old=self._db.execute("SELECT intent_hash,bundle FROM records WHERE request_id=?",(row["request_id"],)).fetchone()
-            if old and (old[0]!=row["request_intent_hash"] or old[1]!=json.dumps(row,separators=(",",":"))): return {"status":"IMPORT_CONFLICT","request_id":row["request_id"]}
-        if candidate[:self._head()[0]] != self._rows(): return {"status":"IMPORT_CONFLICT","reason":"prefix_mismatch"}
-        inserted=0
-        self._db.execute("BEGIN IMMEDIATE")
-        try:
-            if exported_genesis != local_genesis:
-                self._db.execute("UPDATE metadata SET v=? WHERE k='genesis_profile_id'",(genesis_profile,))
-                self._db.execute("UPDATE metadata SET v=? WHERE k='genesis_checker_id'",(genesis_checker,))
-            for control in controls:
-                encoded=json.dumps(control,separators=(",",":"))
-                prior=self._db.execute("SELECT control_json FROM controls WHERE sequence=?",(control["effective_sequence"],)).fetchone()
-                if prior and prior[0] != encoded:
-                    self._db.rollback(); return {"status":"IMPORT_CONFLICT","reason":"control_conflict","sequence":control["effective_sequence"]}
-                self._db.execute("INSERT OR IGNORE INTO controls(sequence,control_json) VALUES(?,?)",(control["effective_sequence"],encoded))
-            for row in candidate[self._head()[0]:]:
-                seq=self._head()[0]+1
-                if row.get("sequence")!=seq: self._db.rollback(); return {"status":"IMPORT_REJECTED","reason":"sequence_gap"}
-                self._db.execute("INSERT INTO records VALUES(?,?,?,?,?,?)",(seq,row["request_id"],row["request_intent_hash"],row["registration_id"],row["previous_head"],json.dumps(row,separators=(",",":"))))
-                inserted += 1
-            self._db.commit()
-        except Exception:
-            self._db.rollback(); raise
-        if not inserted and candidate: return {"status":"IDEMPOTENT_IMPORT","count":0}
-        return {"status":"IMPORTED","count":inserted}
+        with self._lock:
+            self._db.execute("BEGIN IMMEDIATE")
+            try:
+                def stop(status, **fields):
+                    self._db.rollback()
+                    return {"status":status, **fields}
+
+                # Every decision involving local state occurs after the write
+                # lock.  This prevents two importers from validating the same
+                # stale empty prefix and both reporting success.
+                metadata={k:v for k,v in self._db.execute("SELECT k,v FROM metadata")}
+                local_rows=self._rows(); local_controls=self._controls()
+                empty=not local_rows and not local_controls
+                local_genesis=(metadata["genesis_profile_id"],metadata["genesis_checker_id"])
+                exported_genesis=(exported.get("genesis_profile_id"),exported.get("genesis_checker_id"))
+                if exported_genesis != local_genesis:
+                    if not empty or exported.get("profile_id")!=self.profile_id or exported.get("checker_id")!=self.signer.key_id:
+                        return stop("IMPORT_REJECTED",reason="genesis_anchor_mismatch")
+                    genesis_profile,genesis_checker=exported_genesis
+                else:
+                    genesis_profile,genesis_checker=local_genesis
+                if exported.get("profile_id")!=self.profile_id or exported.get("checker_id")!=self.signer.key_id:
+                    return stop("IMPORT_REJECTED",reason="current_state_mismatch")
+
+                if not self._validate_control_chain(controls,candidate,genesis_profile,genesis_checker,self.book_id,exported.get("profile_id"),exported.get("checker_id")):
+                    return stop("IMPORT_REJECTED",reason="invalid_control_timeline")
+                expected_head="GENESIS:test:empty"
+                for n,row in enumerate(candidate,1):
+                    if row.get("previous_head") != expected_head:
+                        return stop("IMPORT_REJECTED",reason="chain_gap")
+                    timeline=self._timeline(n,controls,genesis_profile,genesis_checker,self.book_id)
+                    if timeline is None:
+                        return stop("IMPORT_REJECTED",reason="untrusted_checker_timeline")
+                    profile, checker=timeline
+                    if row.get("profile_id")!=profile or row.get("checker_id")!=checker:
+                        return stop("IMPORT_REJECTED",reason="untrusted_checker_timeline")
+                    if verify_bundle(row,{"book_id":self.book_id,"profile_id":profile,"checker_id":checker,"sequence":n,"previous_head":expected_head,"inclusion":row.get("registration_id")})["status"]!="VALID_UNDER_DECLARED_CONTEXT":
+                        return stop("IMPORT_REJECTED")
+                    expected_head=row.get("registration_id")
+                if exported.get("head") != expected_head:
+                    return stop("IMPORT_REJECTED",reason="head_mismatch")
+
+                if candidate[:len(local_rows)] != local_rows:
+                    return stop("IMPORT_CONFLICT",reason="prefix_mismatch")
+                if controls[:len(local_controls)] != local_controls:
+                    return stop("IMPORT_CONFLICT",reason="control_prefix_mismatch")
+                for row in candidate[len(local_rows):]:
+                    old=self._db.execute("SELECT intent_hash,bundle FROM records WHERE request_id=?",(row["request_id"],)).fetchone()
+                    if old and (old[0]!=row["request_intent_hash"] or old[1]!=json.dumps(row,separators=(",",":"))):
+                        return stop("IMPORT_CONFLICT",request_id=row["request_id"])
+
+                genesis_changed=exported_genesis != local_genesis
+                if genesis_changed:
+                    self._db.execute("UPDATE metadata SET v=? WHERE k='genesis_profile_id'",(genesis_profile,))
+                    self._db.execute("UPDATE metadata SET v=? WHERE k='genesis_checker_id'",(genesis_checker,))
+                controls_inserted=0
+                for control in controls[len(local_controls):]:
+                    encoded=json.dumps(control,separators=(",",":"))
+                    self._db.execute("INSERT INTO controls(sequence,control_json) VALUES(?,?)",(control["effective_sequence"],encoded))
+                    controls_inserted += 1
+                inserted=0
+                for row in candidate[len(local_rows):]:
+                    seq=len(local_rows)+inserted+1
+                    if row.get("sequence")!=seq:
+                        return stop("IMPORT_REJECTED",reason="sequence_gap")
+                    self._db.execute("INSERT INTO records VALUES(?,?,?,?,?,?)",(seq,row["request_id"],row["request_intent_hash"],row["registration_id"],row["previous_head"],json.dumps(row,separators=(",",":"))))
+                    inserted += 1
+                self._db.commit()
+            except Exception:
+                self._db.rollback(); raise
+        if not (genesis_changed or controls_inserted or inserted):
+            return {"status":"IDEMPOTENT_IMPORT","count":0,"controls":0}
+        return {"status":"IMPORTED","count":inserted,"controls":controls_inserted}
     def _validate_export(self, exported):
         metadata={k:v for k,v in self._db.execute("SELECT k,v FROM metadata")}
-        if not isinstance(exported,dict) or exported.get("schema")!="peaches.test-book-export/0.2" or exported.get("book_id")!=self.book_id or exported.get("profile_id")!=self.profile_id or exported.get("checker_id")!=self.signer.key_id:
+        if (not isinstance(exported,dict) or set(exported) != _EXPORT_FIELDS
+                or exported.get("schema")!="peaches.test-book-export/0.2" or exported.get("book_id")!=self.book_id
+                or exported.get("profile_id")!=self.profile_id or exported.get("checker_id")!=self.signer.key_id):
             return False, "schema_or_identity"
         if exported.get("genesis_profile_id")!=metadata["genesis_profile_id"] or exported.get("genesis_checker_id")!=metadata["genesis_checker_id"]:
             return False, "genesis_anchor_mismatch"
         controls=exported.get("controls",[])
         if not isinstance(controls,list) or any(not verify_key_transition(c) for c in controls): return False, "invalid_transition"
         rows=exported.get("records")
-        if not isinstance(rows,list): return False, "records_not_list"
-        for control in controls:
-            effective=control.get("effective_sequence")
-            expected=("GENESIS:test:empty" if effective==1 else rows[effective-2].get("registration_id") if isinstance(effective,int) and 1 < effective <= len(rows)+1 else None)
-            if expected is None or control.get("book_id")!=self.book_id or control.get("previous_head")!=expected: return False, "transition_head_mismatch"
+        if not isinstance(rows,list) or any(not isinstance(row,dict) for row in rows):
+            return False, "records_not_list"
+        if not self._validate_control_chain(controls,rows,metadata["genesis_profile_id"],metadata["genesis_checker_id"],self.book_id,exported.get("profile_id"),exported.get("checker_id")):
+            return False, "invalid_control_timeline"
         prev="GENESIS:test:empty"; seen_req=set(); seen_reg=set()
         for n,row in enumerate(rows,1):
             if not isinstance(row,dict) or row.get("sequence")!=n or row.get("previous_head")!=prev: return False, "chain_mismatch"

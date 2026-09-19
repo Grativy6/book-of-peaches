@@ -1,0 +1,22 @@
+{
+  "claimed_at": "2026-09-19T23:08:27Z",
+  "declaration": {
+    "bytes": "SSwgQ2hyaXN0b3BoZXIgRGFuaWVsIFBhbmcsIGVzdGFibGlzaCB0aGlzIHJlY29yZCBhcyB0aGUgZ2VuZXNpcyByb290IG9mIHRoZSBCb29rIG9mIFBFQUNIRVMuIFRoaXMgZ2VuZXNpcyByZWNvcmRzIG9yaWdpbiBvbmx5LiBJdCBjb25mZXJzIG5vIHRydXRoLCBvd25lcnNoaXAsIGV0aGljcywgYXV0aG9yaXR5LCBjb25zZW50LCBzdGFuZGluZywganVyaXNkaWN0aW9uLCBvciBjb250cm9sLiBUaGUgQm9vayBtYXkgbGF0ZXIgYmUgcmV2aXNlZCwgcmVjb25zdHJ1Y3RlZCwgb3IgbW92ZWQsIGJ1dCB0aGlzIHN0YXJ0aW5nIHRyYWNlIG11c3Qgbm90IGJlIHNpbGVudGx5IHJlcGxhY2VkLgo",
+    "media_type": "text/plain;charset=utf-8",
+    "sha256": "sha256:5aafa18db76fd6a4d2fc9090c2d640e96e8b790b1beb98f2998d465f40a5f0ae"
+  },
+  "floor": "peaches.floor/1",
+  "issuer": {
+    "issuer_id": "peaches:issuer:v1:85aa17713dba350e3544d0ec184589283ee60787e5397b5b6ce0cb3810690ac8",
+    "key_type": "Ed25519",
+    "public_key": "KtSQk6WOiO89x8VQ2Pk8rC0r3eDm7h_NgMNXe0RF66Q"
+  },
+  "nonce": "tp_zwgf7ECGJB6vzs44mBvBV9km8G26R_7DSNQtni8c",
+  "rubric_id": null,
+  "schema": "peaches.floor.stamp/1",
+  "signature": {
+    "suite": "Ed25519",
+    "value": "zIKPJ_CIpwi0_nvhJnVtj3ORvw0TzXprRSLLm70gEjqXuPLj24RfUs4XcR5XLqwPM4ZTf_JcRPxf6DEiaDxwCw"
+  },
+  "stamp_id": "peaches:stamp:v1:be8e384bbe1dacd2b2ae1b89ad0974742bb3bca8dbf07dc67ba8d4e1507a125c"
+}

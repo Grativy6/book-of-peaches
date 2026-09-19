@@ -1,0 +1,8 @@
+{
+  "claimed_declarant": "Christopher Daniel Pang",
+  "identity_binding": "Declarant-directed local generation; no independent identity witness.",
+  "issuer_id": "peaches:issuer:v1:85aa17713dba350e3544d0ec184589283ee60787e5397b5b6ce0cb3810690ac8",
+  "key_type": "Ed25519",
+  "public_key_base64url": "KtSQk6WOiO89x8VQ2Pk8rC0r3eDm7h_NgMNXe0RF66Q",
+  "public_key_raw_sha256": "9aad0cb5521f3e99037cb83032d02d0be5bc45587861bbf3d0fa1d65bb0f9f23"
+}

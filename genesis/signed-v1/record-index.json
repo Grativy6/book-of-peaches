@@ -1,0 +1,38 @@
+{
+  "schema": "peaches.publication-index/1",
+  "kind": "unsigned_package_index_not_floor_envelope",
+  "preparation_commit": "ac06976c605f799348dc1780656c24df1ac07ec8",
+  "records": [
+    {
+      "label": "Book of PEACHES Genesis",
+      "file": "genesis.floor.signed.json",
+      "stamp_id": "peaches:stamp:v1:be8e384bbe1dacd2b2ae1b89ad0974742bb3bca8dbf07dc67ba8d4e1507a125c",
+      "issuer_id": "peaches:issuer:v1:85aa17713dba350e3544d0ec184589283ee60787e5397b5b6ce0cb3810690ac8",
+      "signed_envelope_sha256": "sha256:237f4d3bd01e76b87d59a08ffd0cfdf5c95e9f82049f89e9798c5a762392571b",
+      "size_bytes": 1271,
+      "declaration_sha256": "sha256:5aafa18db76fd6a4d2fc9090c2d640e96e8b790b1beb98f2998d465f40a5f0ae",
+      "claimed_at": "2026-09-19T23:08:27Z"
+    },
+    {
+      "label": "PEACHES:H1",
+      "file": "h1.floor.signed.json",
+      "stamp_id": "peaches:stamp:v1:4aa5684ef76a88dd034ccae265bc2a67439194d5d74b7b319ef053afd99529cb",
+      "issuer_id": "peaches:issuer:v1:85aa17713dba350e3544d0ec184589283ee60787e5397b5b6ce0cb3810690ac8",
+      "signed_envelope_sha256": "sha256:9c9aa214e73c94a33ccefc8ba85c0fc0155b1ce44b393edfda38380825921b41",
+      "size_bytes": 5602,
+      "declaration_sha256": "sha256:cf824d6cec5edaa639bede7f796d4b3f9586710b69050e5c7535805a6f3b34a8",
+      "claimed_at": "2026-09-19T23:08:27Z"
+    }
+  ],
+  "original_bundle": {
+    "file": "PEACHES-signed-records.zip",
+    "sha256": "sha256:63483fbae6232e9ebc1a516b0377c00e7456164d790cb981904dc92bcbde83c2"
+  },
+  "publication_method": {
+    "file": "github-publication-method.md",
+    "media_type": "text/plain;charset=utf-8",
+    "method_id": "peaches:rubric:v1:bbc1e037e8b9cdf1927d978f0b5f71bb20ef9d57364c0076e1f9cb75da5580f9"
+  },
+  "time_evidence": "Independently authenticated time bound not established.",
+  "alias_scope": "PEACHES:H1 is the label in the signed H1 declaration; this index grants no privilege or global priority."
+}
