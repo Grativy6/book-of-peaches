@@ -25,26 +25,44 @@
     {
       "path": "hearthline-lineage.candidate.json",
       "role": "Assistant-prepared declaration candidate based on the user's lineage instructions; not signed or issued.",
-      "size_bytes": 2242,
-      "sha256": "sha256:29cf695d82190bd7b3171b158d5298be39eefc540bce14e9e0313e91274472e4"
+      "size_bytes": 3589,
+      "sha256": "sha256:cf824d6cec5edaa639bede7f796d4b3f9586710b69050e5c7535805a6f3b34a8"
     },
     {
       "path": "authorization-context.md",
       "role": "Conversation transcription preserving earlier declaration and fresh grant; not an authenticated platform export.",
-      "size_bytes": 2910,
-      "sha256": "sha256:8321fe681ec62c21cd0705aa86020d9aef7c05d798ebd79c65be2a5ceaa709a3"
+      "size_bytes": 4942,
+      "sha256": "sha256:aa904cb45b15d979e7f459e60773e397700eb69c4bf5b4c05793ed06bf104a45"
     },
     {
       "path": "README.md",
       "role": "Package interpretation, remaining decisions, preservation, and verification instructions.",
-      "size_bytes": 5549,
-      "sha256": "sha256:310267e6d24ea6204fd02a76a177bf198f8d58bc2972b56562f6922b38541366"
+      "size_bytes": 7569,
+      "sha256": "sha256:d7e8fd3a8ce329d060373e0f56d06895a8482bdf3554fdbf5db5e0755d56b886"
     },
     {
       "path": "sources/four-prompts.docx",
       "role": "Unmodified current ancestry attachment; historical source material, not automatically adopted doctrine.",
       "size_bytes": 39131,
       "sha256": "sha256:dd402c130d1c77595f87307f6b985939c662b035dfaba2391f4df6a5eb500d82"
+    },
+    {
+      "path": "sources/LICENSE-2.0.txt",
+      "role": "Unmodified standard Apache License 2.0 text, accompanying the scoped personal-document license.",
+      "size_bytes": 11358,
+      "sha256": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "sources/four-prompts.license.md",
+      "role": "User-selected Apache-2.0 notice scoped to the declarant's licensable contributions in the unchanged personal ancestry document.",
+      "size_bytes": 1045,
+      "sha256": "sha256:c17dfde1de023581d8ff86404d4eb60e5f1ff258cd8d9379e99a6eba679c5630"
+    },
+    {
+      "path": "ancestry-archive.json",
+      "role": "Private ZIP reference with declarant-supplied SHA-256, reported byte count, exact supplied sidecar digests, and selected receipt fields; original ZIP remains private and uninspected here.",
+      "size_bytes": 3238,
+      "sha256": "sha256:bf4583bb2fc2db8b0b344c4454b0613be7160460b48b26d42794850141c1e9f0"
     }
   ],
   "signing": {
@@ -66,5 +84,22 @@
     "status": "NOT_CREATED"
   },
   "time_boundary": "The historical encounter date is a declarant claim. Exact original message times are not supplied. No signing time or independent observation time is asserted by this preparation.",
-  "revision_boundary": "The earlier human declaration and later fresh grant remain distinct occurrences of the same paragraph. No prior signed record exists in this package and no prior starting trace is silently replaced."
+  "revision_boundary": "The earlier human declaration and later fresh grant remain distinct occurrences of the same paragraph. No prior signed record exists in this package and no prior starting trace is silently replaced.",
+  "personal_ancestry_license_decision": {
+    "license_id": "Apache-2.0",
+    "licensor": "Christopher Daniel Pang",
+    "document": "sources/four-prompts.docx",
+    "document_sha256": "sha256:dd402c130d1c77595f87307f6b985939c662b035dfaba2391f4df6a5eb500d82",
+    "scope": "Declarant's licensable contributions in this personal ancestry document only.",
+    "notice": "sources/four-prompts.license.md",
+    "other_repository_components": "UNRESOLVED",
+    "private_export_license": null
+  },
+  "private_archive_reference": {
+    "record": "ancestry-archive.json",
+    "archive_sha256": "sha256:e6e2c8f58f1f8d55d93420d84bcd80c39103b551f9878a9e66d961239bdd8793",
+    "reported_size_bytes": 1880445298,
+    "verification_status": "LOCAL_HASH_RECEIPT_SUPPLIED_ZIP_NOT_RECOMPUTED_HERE",
+    "archive_bytes_included": false
+  }
 }

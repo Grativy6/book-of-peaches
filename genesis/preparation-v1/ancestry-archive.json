@@ -1,0 +1,40 @@
+{
+  "schema": "hearthline.private-ancestry-reference/1",
+  "label": "August 2026 conversation export retained by Christopher Daniel Pang",
+  "media_type": "application/zip",
+  "status": "LOCAL_HASH_RECEIPT_SUPPLIED",
+  "sha256": "sha256:e6e2c8f58f1f8d55d93420d84bcd80c39103b551f9878a9e66d961239bdd8793",
+  "size_bytes": 1880445298,
+  "verification_basis": "The declarant supplied the digest, a screenshot of a local hashing report, and the original checksum and JSON measurement-receipt files. The digest agrees across all four supplied representations; the receipt and screenshot agree on byte count. This workspace computed the two sidecar file digests but has not received or hashed the ZIP. These representations describe one local measurement, not independent measurements.",
+  "size_basis": "Reported in the supplied measurement receipt and screenshot; the ZIP's size was not independently measured in this workspace.",
+  "supplied_checksum_file": {
+    "media_type": "text/plain",
+    "sha256": "sha256:5f03fe82155b4be59ee9662a217299849df53614e9128072e7a7bf938a1b5866",
+    "digest_basis": "Computed over the exact uploaded checksum-file bytes in this workspace.",
+    "raw_bytes_in_public_package": false
+  },
+  "supplied_measurement_receipt": {
+    "media_type": "application/json",
+    "sha256": "sha256:263f7fe2d6aa9a47bf06747840e6194a8780a60b6becb583cf1a11c866f94cbe",
+    "digest_basis": "Computed over the exact uploaded receipt-file bytes, including its original line endings, in this workspace.",
+    "raw_bytes_in_public_package": false,
+    "receipt_type": "file-sha256-measurement",
+    "algorithm": "SHA-256",
+    "reported_measured_at_utc": "2026-09-19T22:37:16.5705905Z",
+    "reported_file_last_write_utc": "2026-08-22T16:22:22.0000000Z",
+    "reported_scope": "Digest of the complete ZIP file bytes; archive not extracted or modified.",
+    "time_basis": "Local receipt claims only; neither time is independently witnessed or proof of the chats' dates."
+  },
+  "receipt_disclosure": "This public reference includes selected receipt fields and exact original sidecar digests. The original receipt contains a local source path; original sidecar bytes and local identifying filename are not republished here.",
+  "user_description": "this is all the chats i've had from about august 19th. i had an export made that week.",
+  "export_date_label": "2026-08-21",
+  "export_date_basis": "Date label in the user-supplied filename; not independently verified export time.",
+  "coverage_start": null,
+  "coverage_end": null,
+  "content_disclosure": "PRIVATE_RETAINED_BY_DECLARANT",
+  "requested_public_reference": "SHA-256 digest only; no archive contents or local filesystem path.",
+  "archive_license": null,
+  "license_boundary": "The Apache-2.0 selection for four-prompts.docx does not by itself license this separate archive.",
+  "hash_method": "SHA-256 over the complete unchanged ZIP bytes, as reported by the declarant's local hashing workflow; the filename prefix was not used as the digest.",
+  "claim_ceiling": "The supplied digest commits to a claimed archive byte sequence for later comparison. It does not disclose or independently verify the content, completeness, date, authorship, or truth of the chats."
+}

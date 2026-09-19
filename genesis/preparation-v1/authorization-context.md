@@ -57,3 +57,45 @@ The earlier attachment digest reported in this conversation was
 That earlier byte sequence is not included in this package and has not been
 reconstructed. The current surviving copy is separately identified in the
 manifest; no already-issued stamp has been rewritten.
+
+## Personal document license and private archive follow-up
+
+The user subsequently specified:
+
+> i'd like the apache licenses for my personal ancestry document.
+
+Apache-2.0 was the Apache license option in the preceding discussion. The
+new sidecar records that selection for his licensable contributions in the
+current `four-prompts.docx`. The document bytes are preserved unchanged.
+
+The user also requested a SHA reference for a chat-export ZIP retained on his
+own Windows drive, describing it as:
+
+> this is all the chats i've had from about august 19th. i had an export made that week.
+
+Initially only a local file reference was supplied. The local path is
+intentionally not reproduced in this public record.
+
+In a subsequent turn the user supplied this digest:
+
+```text
+e6e2c8f58f1f8d55d93420d84bcd80c39103b551f9878a9e66d961239bdd8793
+```
+
+The accompanying screenshot of another assistant's local hashing report
+shows the same SHA-256 and an exact size reported as 1,880,445,298 bytes.
+It also reports a checksum file and trace receipt saved beside the ZIP; those
+files had not yet been supplied at that point. The report and the pasted hash share a
+source and do not provide independent corroboration. The archive reference
+records the supplied values and this limit. It does not license or disclose
+the ZIP contents, and this workspace has not recomputed the archive digest.
+
+The user subsequently uploaded the checksum file and JSON measurement
+receipt. Both name the same archive digest; the receipt reports the same
+size. Their exact byte digests were computed in this workspace and retained
+in the public archive reference. The original receipt's local source path
+and identifying filename are not republished. The receipt describes a local
+measurement only and explicitly disclaims independent timestamp, signature,
+authorship, ancestry, ownership, or authorization. The two supplied sidecars
+add inspectable source records of that measurement; they do not turn it into
+multiple independent observations of the archive.

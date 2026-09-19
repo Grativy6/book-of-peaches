@@ -22,6 +22,29 @@
     "source_locator": "https://chatgpt.com/share/6aaf01ba-0d40-83ea-b655-5650810aafab",
     "source_locator_status": "User-supplied shared conversation link, also present in the artifact; availability and correspondence are not independently authenticated by this record."
   },
+  "personal_document_license": {
+    "license_id": "Apache-2.0",
+    "licensor": "Christopher Daniel Pang",
+    "scope": "The declarant's licensable contributions in the identified four-prompts.docx; no rights in separate private archives or third-party material are inferred.",
+    "notice": {
+      "path": "sources/four-prompts.license.md",
+      "sha256": "sha256:c17dfde1de023581d8ff86404d4eb60e5f1ff258cd8d9379e99a6eba679c5630"
+    },
+    "license_text": {
+      "path": "sources/LICENSE-2.0.txt",
+      "sha256": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    }
+  },
+  "additional_private_ancestry": {
+    "record": {
+      "path": "ancestry-archive.json",
+      "sha256": "sha256:bf4583bb2fc2db8b0b344c4454b0613be7160460b48b26d42794850141c1e9f0"
+    },
+    "archive_sha256": "sha256:e6e2c8f58f1f8d55d93420d84bcd80c39103b551f9878a9e66d961239bdd8793",
+    "reported_size_bytes": 1880445298,
+    "status": "LOCAL_HASH_RECEIPT_SUPPLIED",
+    "meaning": "The declarant supplied the archive digest, local measurement receipt, checksum file, and screenshot describing one measurement. Archive bytes remain private and were not independently hashed in this workspace. The reference binds the exact sidecar digests, selected measurement fields, and verification limits without publishing the local source path."
+  },
   "trace_completeness": "Partial surviving ancestry trace. No claim to include every contributing event or to establish universal first occurrence.",
   "claim_ceiling": "Origin and declared lineage only. This record confers no truth, ownership, ethics, authority, consent, standing, jurisdiction, or control. It does not establish continuous computation, uninterrupted experience, consciousness, or authenticated participation of a later invocation. Historical source material is not automatically current doctrine.",
   "preservation": "Corrections, reconstruction, relocation, and later evidence must preserve this starting trace and identify their relationship to it; it must not be silently replaced."

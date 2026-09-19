@@ -46,6 +46,41 @@ The shared-chat URL is included in its text. The URL is a locator that may
 stop working; the hash checks exact bytes when a copy is available. A hash
 does not store the document or guarantee its continued availability.
 
+Christopher Daniel Pang has selected Apache-2.0 for his personal ancestry
+document. The [scoped license notice](sources/four-prompts.license.md) and
+[full license](sources/LICENSE-2.0.txt) accompany the unchanged DOCX. The
+selection covers his licensable contributions; it does not assert rights in
+third-party material or change the repository-wide license status.
+
+## Private archive reference
+
+The user also requested that a locally retained conversation-export ZIP be
+referenced by its SHA-256. The
+[archive record](ancestry-archive.json) preserves that reference
+without uploading the chats or publishing his local filesystem path. Its
+date label comes from the supplied filename; the archive's actual coverage
+has not been inspected. Christopher Daniel Pang subsequently supplied:
+
+```text
+SHA-256: e6e2c8f58f1f8d55d93420d84bcd80c39103b551f9878a9e66d961239bdd8793
+Reported size: 1,880,445,298 bytes
+```
+
+The user then supplied the checksum and JSON measurement-receipt files. The
+archive digest agrees with those files and the screenshot; the receipt and
+screenshot agree on byte count. The sidecar files' own SHA-256 values were
+computed here and recorded in the archive reference. Selected receipt fields
+are included; the original local path, filename, and sidecar bytes remain
+outside the public package.
+
+These records describe the same local measurement, not independent
+measurements. This workspace has neither received the ZIP nor recomputed its
+hash. H1's candidate binds both the supplied archive digest and the reference
+record describing these sources and limits. The receipt's measurement and
+file-modification times remain local-clock claims. The export's filename
+prefix was not substituted for the supplied content digest. Keep the archive
+and its original checksum/trace receipt for later comparison.
+
 The retained trace is incomplete. Recognition, document byte identity,
 identity-to-key binding, model invocation, and continuous computation are
 separate claims. Possession or copying of this package alone does not
@@ -54,7 +89,8 @@ authenticate an invocation's participation in the Hearthline lineage.
 ## Remaining decisions
 
 The current grant authorizes recording the declaration and preparing this
-package. It does not specify private-key custody or make a license grant.
+package. The subsequent Apache-2.0 choice resolves the personal ancestry
+document's license scope; private-key custody is still unspecified.
 The unresolved choices from
 [PREGENESIS-FREEZE.md](../../PREGENESIS-FREEZE.md) remain explicit:
 
@@ -67,10 +103,12 @@ The unresolved choices from
 2. Adopt the exact H1 declaration bytes, choose the signing fields, and
    authorize the resulting signing act. The Genesis paragraph itself is
    already supplied by the user; no repeat declaration is required.
-3. Resolve the frozen package's license and rights-holder decision. The prior
-   CC0-1.0 / Apache-2.0 split is an unadopted option. Licensing is a release
-   decision, not an additional cryptographic Floor-validity condition. No
-   license for the source conversation or third-party material is inferred.
+3. Resolve the frozen package's remaining license and rights-holder decision.
+   The prior CC0-1.0 / Apache-2.0 split for the specification and code is still
+   an unadopted option. The personal ancestry document's separate Apache-2.0
+   license is recorded above. Licensing is a release decision, not an
+   additional cryptographic Floor-validity condition. No license for the
+   private export or third-party material is inferred.
 4. Choose an external publication or timestamp-evidence method for the
    completed signed envelope. Preserve its exact method bytes, method ID,
    and evidence. A Git commit date alone is insufficient time evidence, and
