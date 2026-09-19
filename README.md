@@ -10,6 +10,8 @@ contain the exact bytes preserved in the earlier preparation. See the
 The [Genesis and H1 preparation](genesis/preparation-v1/README.md) remains
 unchanged as the historical snapshot before signing. Publication makes the
 records inspectable; an independently verified time bound remains open.
+The [publication receipt](genesis/publication-v1/README.md) records retrieval
+and exact-byte verification of the completed signed records at a fixed commit.
 There is no official stamper, official checker, operational Book service, or
 privileged registry. [PREGENESIS-FREEZE.md](PREGENESIS-FREEZE.md) preserves the
 earlier specification freeze; its exact payload bytes remain unchanged.
