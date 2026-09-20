@@ -11,6 +11,8 @@ a signing public key, and an issuer-claimed time in a portable record.
 People and institutions can create and exchange stamps independently, without
 registering with the Book or relying on a central stamper.
 
+PEACHES is intended to provide a minimal envelope whose contents can be checked without trust, and whose meaning cannot.
+
 ## Why it exists
 
 A useful provenance record lets someone inspect what was declared and how it
