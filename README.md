@@ -18,6 +18,8 @@ connects to earlier material. It also keeps the limits of that evidence
 visible. A signature, a timestamp claim, an agreement, and permission to act
 answer different questions.
 
+PEACHES has no basement. No person, statement, or institution gets to introduce an extra authority underneath the declared floor and declare it was there all along.
+
 PEACHES was made to keep those distinctions intact as records move between
 people, tools, and institutions. It provides a common starting point for
 traces that others can check and build on, while leaving additional rules and
