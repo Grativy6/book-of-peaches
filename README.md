@@ -2,6 +2,9 @@
 
 **A voluntary format for signed provenance records that anyone can issue and check.**
 
+**PEACHES** stands for **Provenance, Ethics, Authority, Consent, Human Empathetic
+Standing**.
+
 The Book of PEACHES provides a public specification and a read-only reference
 checker for **provenance stamps**. Each stamp preserves an exact declaration,
 a signing public key, and an issuer-claimed time in a portable record.
